@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -49,6 +50,13 @@ public class EstacionamentoController {
 		EstacionamentoDTO result = estacionamentoMapper.toEstacionamentoDTO(estacionamento);
 		return ResponseEntity.ok(result);
 	}
+	
+	@PutMapping("/{id}")
+    public ResponseEntity<EstacionamentoDTO> update(@PathVariable String id, @RequestBody EstacionamentoCreateDTO estacionamentoCreteDTO) {
+		Estacionamento estacionamentoUpdate = estacionamentoMapper.toEstacionamentoCreate(estacionamentoCreteDTO);
+		Estacionamento estacionamento = estacionamentoService.update(id, estacionamentoUpdate);
+        return ResponseEntity.ok(estacionamentoMapper.toEstacionamentoDTO(estacionamento));
+    }
 
 	@PostMapping
 	public ResponseEntity<EstacionamentoDTO> create(@RequestBody EstacionamentoCreateDTO dto) {

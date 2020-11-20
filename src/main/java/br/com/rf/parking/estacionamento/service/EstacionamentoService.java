@@ -53,4 +53,11 @@ public class EstacionamentoService {
 
 	}
 
+	public Estacionamento update(String id, Estacionamento estacionamentoCreate) {
+		Estacionamento estacionamento = findById(id);
+		estacionamento.setCor(estacionamentoCreate.getCor());
+	        estacionamentoMap.replace(id, estacionamento);
+	        return estacionamento;
+	
+	}
 }
