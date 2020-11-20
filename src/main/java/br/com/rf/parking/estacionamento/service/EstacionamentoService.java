@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import br.com.rf.parking.estacionamento.exception.EstacionamentoNotFoundException;
 import br.com.rf.parking.estacionamento.models.Estacionamento;
 
 @Service
@@ -36,7 +37,11 @@ public class EstacionamentoService {
 	}
 
 	public Estacionamento findById(String id) {
-		return estacionamentoMap.get(id);
+		Estacionamento estacionamento = estacionamentoMap.get(id);
+	        if (estacionamento == null) {
+	            throw new EstacionamentoNotFoundException(id);
+	        }
+	        return estacionamento;
 	}
 
 	public Estacionamento create(Estacionamento estacionamentoCreate) {
@@ -60,4 +65,12 @@ public class EstacionamentoService {
 	        return estacionamento;
 	
 	}
+
+	 public Estacionamento exit(String id) {
+	        //recuperar o estacionado
+	        //atualizar data de saida
+	        //calcular o valor
+
+	        return null;
+	    }
 }
