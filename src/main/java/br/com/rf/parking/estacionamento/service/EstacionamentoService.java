@@ -1,5 +1,6 @@
 package br.com.rf.parking.estacionamento.service;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,8 +18,14 @@ public class EstacionamentoService {
 	
 	static {
 		var id = getUUID();
+		var id1 = getUUID();
+		
 		Estacionamento estacionamento = new Estacionamento(id, "DDD-7878", "SC", "PALIO","PRATA");
+		Estacionamento estacionamento1 = new Estacionamento(id1, "DHG-8776", "MA", "CORSA","AZUL");
+		
+		
 		estacionamentoMap.put(id, estacionamento);
+		estacionamentoMap.put(id1, estacionamento1);
 	}
 	public List<Estacionamento> findAll(){
 		return estacionamentoMap.values().stream().collect(Collectors.toList());
@@ -27,5 +34,17 @@ public class EstacionamentoService {
 	private static String getUUID() {
 		return UUID.randomUUID().toString().replace("-", "");
 	}
+	
+	public Estacionamento findById(String id) {
+        return estacionamentoMap.get(id);
+    }
+	
+	public Estacionamento create(Estacionamento estacionamentoCreate) {
+        String uuid = getUUID();
+        estacionamentoCreate.setId(uuid);
+        estacionamentoCreate.setDataEntrada(LocalDateTime.now());
+        estacionamentoMap.put(uuid, estacionamentoCreate);
+        return estacionamentoCreate;
+    }
 
 }

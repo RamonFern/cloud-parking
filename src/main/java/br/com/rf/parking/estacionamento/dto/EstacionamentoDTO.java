@@ -2,6 +2,7 @@ package br.com.rf.parking.estacionamento.dto;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -12,7 +13,9 @@ public class EstacionamentoDTO {
     private String estado;
     private String modelo;
     private String cor;
+    @JsonFormat(pattern = "dd/MM/yyyy HH:mm")
     private LocalDateTime dataEntrada;
+    @JsonFormat(pattern = "dd/MM/yyyy HH:mm")
     private LocalDateTime datasaida;
     private Double valor;
     
