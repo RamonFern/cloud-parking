@@ -25,6 +25,7 @@ class EstacionamentoApplicationTests {
 	@Test
     void whenFindAllThenCheckResult() {
 	        RestAssured.given()
+	        		.auth().basic("ramon", "123456")
 	                .when()
 	                .get("/estacionamento")
 	                .then()
@@ -41,6 +42,7 @@ class EstacionamentoApplicationTests {
 
         RestAssured.given()
                 .when()
+                .auth().basic("ramon", "123456")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(createDTO)
                 .post("/estacionamento")
