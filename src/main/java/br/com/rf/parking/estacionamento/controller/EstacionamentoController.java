@@ -67,15 +67,17 @@ public class EstacionamentoController {
 	}
 
 	@DeleteMapping("/{id}")
-	public ResponseEntity delete(@PathVariable String id) {
+	public ResponseEntity<?> delete(@PathVariable String id) {
 		estacionamentoService.delete(id);
 		return ResponseEntity.noContent().build();
 	}
 	
 	@PostMapping("/{id}")
-    public ResponseEntity<EstacionamentoDTO> exit(@PathVariable String id) {
-		Estacionamento estacionamento = estacionamentoService.exit(id);
+    public ResponseEntity<EstacionamentoDTO> checkOut(@PathVariable String id) {
+		Estacionamento estacionamento = estacionamentoService.checkOut(id);
         return ResponseEntity.ok(estacionamentoMapper.toEstacionamentoDTO(estacionamento));
     }
+	
+	
 
 }

@@ -2,8 +2,12 @@ package br.com.rf.parking.estacionamento.models;
 
 import java.time.LocalDateTime;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
+@Entity
 public class Estacionamento {
-	
+	@Id
 	private String id;
     private String placa;
     private String estado;

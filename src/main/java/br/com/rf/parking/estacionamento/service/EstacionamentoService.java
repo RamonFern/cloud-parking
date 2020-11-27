@@ -7,70 +7,74 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+//import javax.transaction.Transactional;
+
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import br.com.rf.parking.estacionamento.exception.EstacionamentoNotFoundException;
 import br.com.rf.parking.estacionamento.models.Estacionamento;
+import br.com.rf.parking.estacionamento.repository.EstacionamentoRepository;
 
 @Service
 public class EstacionamentoService {
 
-	private static Map<String, Estacionamento> estacionamentoMap = new HashMap<String, Estacionamento>();
+	private final EstacionamentoRepository estacionamentoRepository;
 
-//	static {
-//		var id = getUUID();
-//		var id1 = getUUID();
-//
-//		Estacionamento estacionamento = new Estacionamento(id, "DDD-7878", "SC", "PALIO", "PRATA");
-//		Estacionamento estacionamento1 = new Estacionamento(id1, "DHG-8776", "MA", "CORSA", "AZUL");
-//
-//		estacionamentoMap.put(id, estacionamento);
-//		estacionamentoMap.put(id1, estacionamento1);
-//	}
+	public EstacionamentoService(EstacionamentoRepository estacionamentoRepository) {
+		this.estacionamentoRepository = estacionamentoRepository;
+	}
 
+	@Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
 	public List<Estacionamento> findAll() {
-		return estacionamentoMap.values().stream().collect(Collectors.toList());
+		return estacionamentoRepository.findAll();
 	}
 
 	private static String getUUID() {
 		return UUID.randomUUID().toString().replace("-", "");
 	}
 
+	@Transactional(readOnly = true)
 	public Estacionamento findById(String id) {
-		Estacionamento estacionamento = estacionamentoMap.get(id);
-	        if (estacionamento == null) {
-	            throw new EstacionamentoNotFoundException(id);
-	        }
-	        return estacionamento;
+		return estacionamentoRepository.findById(id).orElseThrow(() -> new EstacionamentoNotFoundException(id));
 	}
 
+	@Transactional
 	public Estacionamento create(Estacionamento estacionamentoCreate) {
 		String uuid = getUUID();
 		estacionamentoCreate.setId(uuid);
 		estacionamentoCreate.setDataEntrada(LocalDateTime.now());
-		estacionamentoMap.put(uuid, estacionamentoCreate);
+		estacionamentoRepository.save(estacionamentoCreate);
 		return estacionamentoCreate;
 	}
 
+	@Transactional
 	public void delete(String id) {
 		findById(id);
-		estacionamentoMap.remove(id);
+		estacionamentoRepository.deleteById(id);
 
 	}
 
+	@Transactional
 	public Estacionamento update(String id, Estacionamento estacionamentoCreate) {
 		Estacionamento estacionamento = findById(id);
 		estacionamento.setCor(estacionamentoCreate.getCor());
-	        estacionamentoMap.replace(id, estacionamento);
-	        return estacionamento;
-	
+		estacionamento.setEstado(estacionamentoCreate.getEstado());
+		estacionamento.setModelo(estacionamentoCreate.getModelo());
+		estacionamento.setPlaca(estacionamentoCreate.getPlaca());
+		estacionamentoRepository.save(estacionamento);
+		return estacionamento;
+
 	}
 
-	 public Estacionamento exit(String id) {
-	        //recuperar o estacionado
-	        //atualizar data de saida
-	        //calcular o valor
-
-	        return null;
-	    }
+	
+	@Transactional
+	public Estacionamento checkOut(String id) {
+		Estacionamento estacionamento = findById(id);
+		estacionamento.setDatasaida(LocalDateTime.now());
+		estacionamento.setValor(EstacionamentoCheckOut.getBill(estacionamento));
+		estacionamentoRepository.save(estacionamento);
+		return estacionamento;
+	}
 }
